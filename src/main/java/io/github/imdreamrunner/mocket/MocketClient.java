@@ -1,6 +1,5 @@
 package io.github.imdreamrunner.mocket;
 
-
 public final class MocketClient {
     private MocketClient(String host, int port) {
 
