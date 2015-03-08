@@ -34,6 +34,8 @@ class SocketDaemon extends Thread {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 log.info("Receiving " + inputLine);
+                Message message = Message.fromJson(inputLine);
+                handler.handleMessage(this, message);
             }
         } catch (IOException e) {
             if (e.getMessage().equals("Socket closed")) {
@@ -42,6 +44,9 @@ class SocketDaemon extends Thread {
                 exception = new MocketException(e);
                 log.warning("Cannot read from client: " + exception.toString());
             }
+        } catch (MocketException e) {
+            exception = e;
+            log.warning("Exception reading from client: " + exception.toString());
         }
     }
 

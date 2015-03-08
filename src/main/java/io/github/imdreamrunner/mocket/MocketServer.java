@@ -59,6 +59,7 @@ public class MocketServer {
     private class MessageHandler implements SocketHandler {
         @Override
         public void handleMessage(SocketDaemon socket, Message message) throws MocketException {
+            log.info("Server handle message from client: " + message.toString());
             Client client;
             if (clientMap.containsKey(socket)) {
                 client = clientMap.get(socket);

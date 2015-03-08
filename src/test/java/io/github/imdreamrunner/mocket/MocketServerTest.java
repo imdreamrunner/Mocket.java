@@ -7,12 +7,16 @@ import org.junit.Test;
 import java.util.logging.Logger;
 import io.github.imdreamrunner.mocket.MocketServer.*;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class MocketServerTest {
     private static final Logger log = Logger.getLogger(MocketServerTest.class.getName());
     MocketServer server;
     MocketClient client;
+
+    int expectMessage = 0;
+    int receivedMessage = 0;
 
     static int serverPort = 5000;
 
@@ -41,6 +45,7 @@ public class MocketServerTest {
             server.stop();
             log.info("Deleting test client.");
             client.disconnect();
+            assertEquals("Receive message number", expectMessage, receivedMessage);
         } catch (MocketException e) {
             fail("Exception: " + e.toString());
         }
@@ -52,13 +57,15 @@ public class MocketServerTest {
     }
 
     @Test
-    public void createHandlerTest() {
-        ServerHandler handler = new ServerHandler() {
-            @Override
+    public void createHandlerTest() throws InterruptedException {
+        expectMessage = 1;
+        server.on("test", new ServerHandler() {
             public void handle(Client client, String content) {
                 log.info("Receive message " + content + " from " + client.toString());
+                receivedMessage += 1;
             }
-        };
-        server.on("test", handler);
+        });
+        client.trigger("test", "hello message");
+        Thread.sleep(200);
     }
 }
