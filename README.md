@@ -22,7 +22,7 @@ import io.github.imdreamrunner.mocket.MocketServer.*;
 MocketServer server = new MocketServer(5000); 
 // Replace 5000 by the port you want to listen to.
 server.start();
-// do stuff
+// Do stuff.
 server.stop();
 ```
 
@@ -53,6 +53,9 @@ server.trigger(client, "some-event", "Message content.");
 MocketClient client = MocketClient.getInstance("127.0.0.1", 5000);
 // Replace "127.0.0.1" with server's host name or IP address,
 // and 5000 with server's port.
+client.connect();
+// Do stuff.
+client.disconnect();
 ```
 
 #### Handle message from server
