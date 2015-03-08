@@ -40,7 +40,12 @@ public class NetworkTest {
     }
 
     @After
-    public void stopServer() {
+    public void stopServer() throws InterruptedException {
+        int sleepCount = 0;
+        while (receivedMessage < expectMessage && sleepCount < 5) {
+            Thread.sleep(100);
+            sleepCount++;
+        }
         try {
             log.info("Stopping test server.");
             server.stop();
@@ -58,7 +63,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void clientSendingTest() throws InterruptedException {
+    public void clientSendingTest() {
         expectMessage = 1;
         final String event = "testEvent";
         final String message = "Test Message";
@@ -70,7 +75,6 @@ public class NetworkTest {
             }
         });
         client.trigger(event, message);
-        Thread.sleep(200);
     }
 
     @Test
