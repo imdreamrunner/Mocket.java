@@ -2,9 +2,14 @@ package io.github.imdreamrunner.mocket;
 
 public class MocketException extends Exception {
     private Exception originException;
+    private String message;
 
     public MocketException(Exception originException) {
         this.originException = originException;
+    }
+
+    public MocketException(String message) {
+        this.message = message;
     }
 
     public Exception getOriginException() {
@@ -15,6 +20,9 @@ public class MocketException extends Exception {
     public String toString() {
         if (originException != null) {
             return "MocketException: " + originException.toString();
+        }
+        if (message != null) {
+            return "MocketException: " + message;
         }
         return "UnknownMocketException";
     }

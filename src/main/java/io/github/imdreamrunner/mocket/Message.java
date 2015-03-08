@@ -78,6 +78,6 @@ class Message {
 
     @Override
     public String toString() {
-        return "Mocket Message: " + toJson();
+        return "<Message " + toJson() + ">";
     }
 }

@@ -58,13 +58,12 @@ public class MocketServer {
 
     private class MessageHandler implements SocketHandler {
         @Override
-        public void handleMessage(SocketDaemon socket, Message message) {
+        public void handleMessage(SocketDaemon socket, Message message) throws MocketException {
             Client client;
             if (clientMap.containsKey(socket)) {
                 client = clientMap.get(socket);
             } else {
-                client = new Client(socket);
-                clientMap.put(socket, client);
+                throw new MocketException("Known client");
             }
             if (handlers.containsKey(message.getEvent())) {
                 for (ServerHandler handler : handlers.get(message.getEvent())) {
@@ -96,7 +95,9 @@ public class MocketServer {
                 log.info("Server is listening.");
                 while (!isInterrupted()) {
                     Socket socket = serverSocket.accept();
+                    log.info("New client connected.");
                     SocketDaemon clientThread = new SocketDaemon(socket, messageHandler);
+                    clientMap.put(clientThread, new Client(clientThread));
                     clientThread.start();
                 }
                 if (!serverSocket.isClosed()) {
@@ -136,12 +137,16 @@ public class MocketServer {
         }
     }
 
-    public void trigger(String event, String message) {
-
+    public void trigger(String event, String content) {
+        log.info("Triggering event " + event + " to all clients");
+        for (Client client : clientMap.values()) {
+            trigger(client, event, content);
+        }
     }
 
-    public void trigger(Client client, String event, String message) {
-
+    public void trigger(Client client, String event, String content) {
+        log.info("Triggering event " + event + " to " + client.toString());
+        client.trigger(event, content);
     }
 
     public static class Client {
@@ -157,6 +162,11 @@ public class MocketServer {
 
         public int getPort() {
             return socket.getPort();
+        }
+
+        public void trigger(String event, String content) {
+            Message message = Message.createUserMessage(event, content);
+            socket.send(message);
         }
 
         @Override

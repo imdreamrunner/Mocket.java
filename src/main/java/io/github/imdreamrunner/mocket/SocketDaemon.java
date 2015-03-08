@@ -22,6 +22,7 @@ class SocketDaemon extends Thread {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            log.info("Socket has been connected.");
         } catch (IOException e) {
             throw new MocketException(e);
         }
@@ -32,7 +33,7 @@ class SocketDaemon extends Thread {
         try {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                log.info("Input" + inputLine);
+                log.info("Receiving " + inputLine);
             }
         } catch (IOException e) {
             if (e.getMessage().equals("Socket closed")) {
@@ -45,11 +46,12 @@ class SocketDaemon extends Thread {
     }
 
     public void send(Message message) {
+        log.info("Sending message " + message.toString());
         out.println(message.toJson());
     }
 
     public String getHost() {
-        return socket.getInetAddress().toString();
+        return socket.getInetAddress().getHostAddress();
     }
 
     public int getPort() {
