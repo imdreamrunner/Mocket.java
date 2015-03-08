@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.logging.Logger;
 import io.github.imdreamrunner.mocket.MocketServer.*;
+import io.github.imdreamrunner.mocket.MocketClient.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -57,15 +58,35 @@ public class MocketServerTest {
     }
 
     @Test
-    public void createHandlerTest() throws InterruptedException {
+    public void clientSendingTest() throws InterruptedException {
         expectMessage = 1;
-        server.on("test", new ServerHandler() {
+        final String event = "testEvent";
+        final String message = "Test Message";
+        server.on(event, new ServerHandler() {
             public void handle(Client client, String content) {
                 log.info("Receive message " + content + " from " + client.toString());
                 receivedMessage += 1;
+                assertEquals("Message content", message, content);
             }
         });
-        client.trigger("test", "hello message");
+        client.trigger(event, message);
+        Thread.sleep(200);
+    }
+
+    @Test
+    public void serverSendingTest() throws InterruptedException {
+        expectMessage = 1;
+        final String event = "testEvent";
+        final String message = "Test Message";
+        client.on(event, new ClientHandler() {
+            @Override
+            public void handle(String content) {
+                log.info("Receive message " + content + " from server.");
+                receivedMessage += 1;
+                assertEquals("Message content", message, content);
+            }
+        });
+        server.trigger(event, message);
         Thread.sleep(200);
     }
 }
