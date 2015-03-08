@@ -48,6 +48,7 @@ class SocketDaemon extends Thread {
             exception = e;
             log.warning("Exception reading from client: " + exception.toString());
         }
+        handler.handleClose(this);
     }
 
     public void send(Message message) {

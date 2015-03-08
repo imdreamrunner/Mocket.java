@@ -15,20 +15,25 @@ import java.util.logging.Logger;
 public class MocketServer {
     private static final Logger log = Logger.getLogger(MocketServer.class.getName());
 
+    private static enum ServerEvent {
+        SERVER_START, SERVER_STOP,
+        CLIENT_CONNECT, CLIENT_DISCONNECT
+    }
+
     private String host;
     private int port;
     private boolean isListening;
     private ServerDaemon serverDaemon;
     private Map<String, List<ServerHandler>> handlers;
     private Map<SocketDaemon, Client> clientMap = new HashMap<SocketDaemon, Client>();
-    private MessageHandler messageHandler;
+    private ServerSocketHandler serverSocketHandler;
 
     public MocketServer(String host, int port) {
         this.host = host;
         this.port = port;
         this.isListening = false;
         this.handlers = new HashMap<String, List<ServerHandler>>();
-        this.messageHandler = new MessageHandler();
+        this.serverSocketHandler = new ServerSocketHandler();
     }
 
     public MocketServer(int port) {
@@ -54,9 +59,10 @@ public class MocketServer {
             log.log(Level.SEVERE, "Exception happens in server");
             log.log(Level.SEVERE, exception.toString());
         }
+        dispatchEvent(ServerEvent.SERVER_STOP.toString().toLowerCase());
     }
 
-    private class MessageHandler implements SocketHandler {
+    private class ServerSocketHandler implements SocketHandler {
         @Override
         public void handleMessage(SocketDaemon socket, Message message) throws MocketException {
             log.info("Server handle message from client: " + message.toString());
@@ -64,14 +70,39 @@ public class MocketServer {
             if (clientMap.containsKey(socket)) {
                 client = clientMap.get(socket);
             } else {
-                throw new MocketException("Known client");
+                throw new MocketException("Unknown client");
             }
             if (handlers.containsKey(message.getEvent())) {
-                for (ServerHandler handler : handlers.get(message.getEvent())) {
-                    handler.handle(client, message.getContent());
-                }
+                dispatchEvent(message.getEvent(), client, message.getContent());
             }
         }
+
+        @Override
+        public void handleClose(SocketDaemon socket) {
+            Client client = clientMap.get(socket);
+            dispatchEvent(ServerEvent.CLIENT_DISCONNECT.toString().toLowerCase(), client);
+            clientMap.remove(socket);
+        }
+    }
+
+    private void dispatchEvent(String event, Client client, String content) {
+        if (handlers.get(event) != null) {
+            for (ServerHandler handler : handlers.get(event)) {
+                handler.handle(client, content);
+            }
+        }
+    }
+
+    private void dispatchEvent(String event, Client client) {
+        dispatchEvent(event, client, null);
+    }
+
+    private void dispatchEvent(String event, String content) {
+        dispatchEvent(event, null, content);
+    }
+
+    private void dispatchEvent(String event) {
+        dispatchEvent(event, null, null);
     }
 
     private class ServerDaemon extends Thread {
@@ -83,6 +114,7 @@ public class MocketServer {
                 InetAddress bindAddress = InetAddress.getByName(host);
                 serverSocket = new ServerSocket(port, 10, bindAddress);
                 isListening = true;
+                dispatchEvent(ServerEvent.SERVER_START.toString().toLowerCase());
             } catch (UnknownHostException e) {
                 throw new MocketException(e);
             } catch (IOException e) {
@@ -97,9 +129,11 @@ public class MocketServer {
                 while (!isInterrupted()) {
                     Socket socket = serverSocket.accept();
                     log.info("New client connected.");
-                    SocketDaemon clientThread = new SocketDaemon(socket, messageHandler);
-                    clientMap.put(clientThread, new Client(clientThread));
+                    SocketDaemon clientThread = new SocketDaemon(socket, serverSocketHandler);
+                    Client client = new Client(clientThread);
+                    clientMap.put(clientThread, client);
                     clientThread.start();
+                    dispatchEvent(ServerEvent.CLIENT_CONNECT.toString().toLowerCase(), client);
                 }
                 if (!serverSocket.isClosed()) {
                     serverSocket.close();

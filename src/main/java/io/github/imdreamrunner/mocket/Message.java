@@ -10,7 +10,7 @@ import io.github.imdreamrunner.util.Json;
 class Message {
     private static final Logger log = Logger.getLogger(Message.class.getName());
 
-    public enum MessageType {
+    public static enum MessageType {
         SYSTEM, USER
     }
 

@@ -21,10 +21,41 @@ public class MocketServerTest {
 
     static int serverPort = 5000;
 
-    @Before
-    public void startServer() {
+    @Test
+    public void serverTest() throws InterruptedException {
+        expectMessage = 4;
+
         log.info("Starting test server at port " + serverPort + ".");
         server = new MocketServer(serverPort);
+
+        server.on("server_start", new ServerHandler() {
+            public void handle(Client client, String content) {
+                log.info("Server started.");
+                receivedMessage += 1;
+            }
+        });
+
+        server.on("client_connect", new ServerHandler() {
+            public void handle(Client client, String content) {
+                log.info("Client " + client.toString() + " connected.");
+                receivedMessage += 1;
+            }
+        });
+
+        server.on("server_stop", new ServerHandler() {
+            public void handle(Client client, String content) {
+                log.info("Server stopped.");
+                receivedMessage += 1;
+            }
+        });
+
+        server.on("client_disconnect", new ServerHandler() {
+            public void handle(Client client, String content) {
+                log.info("Client " + client.toString() + " disconnected.");
+                receivedMessage += 1;
+            }
+        });
+
         try {
             server.start();
         } catch (MocketException e) {
@@ -37,56 +68,19 @@ public class MocketServerTest {
         } catch (MocketException e) {
             fail("Start client with exception: " + e.toString());
         }
-    }
 
-    @After
-    public void stopServer() {
         try {
             log.info("Stopping test server.");
             server.stop();
             log.info("Deleting test client.");
             client.disconnect();
-            assertEquals("Receive message number", expectMessage, receivedMessage);
         } catch (MocketException e) {
             fail("Exception: " + e.toString());
         }
-    }
 
-    @Test
-    public void serverSendMessageTest() {
-        server.trigger("test", "content");
-    }
-
-    @Test
-    public void clientSendingTest() throws InterruptedException {
-        expectMessage = 1;
-        final String event = "testEvent";
-        final String message = "Test Message";
-        server.on(event, new ServerHandler() {
-            public void handle(Client client, String content) {
-                log.info("Receive message " + content + " from " + client.toString());
-                receivedMessage += 1;
-                assertEquals("Message content", message, content);
-            }
-        });
-        client.trigger(event, message);
         Thread.sleep(200);
+
+        assertEquals("Number of message received", expectMessage, receivedMessage);
     }
 
-    @Test
-    public void serverSendingTest() throws InterruptedException {
-        expectMessage = 1;
-        final String event = "testEvent";
-        final String message = "Test Message";
-        client.on(event, new ClientHandler() {
-            @Override
-            public void handle(String content) {
-                log.info("Receive message " + content + " from server.");
-                receivedMessage += 1;
-                assertEquals("Message content", message, content);
-            }
-        });
-        server.trigger(event, message);
-        Thread.sleep(200);
-    }
 }

@@ -16,20 +16,20 @@ public final class MocketClient {
     private boolean isConnected;
     private SocketDaemon clientDaemon;
     private Map<String, List<ClientHandler>> handlers;
-    private MessageHandler messageHandler;
+    private ClientSocketHandler clientSocketHandler;
 
     private MocketClient(String host, int port) {
         this.host = host;
         this.port = port;
         this.isConnected = false;
         this.handlers = new HashMap<String, List<ClientHandler>>();
-        this.messageHandler = new MessageHandler();
+        this.clientSocketHandler = new ClientSocketHandler();
     }
 
     public void connect() throws MocketException {
         try {
             Socket socket = new Socket(host, port);
-            clientDaemon = new SocketDaemon(socket, this.messageHandler);
+            clientDaemon = new SocketDaemon(socket, this.clientSocketHandler);
             clientDaemon.start();
         } catch (IOException e) {
             throw new MocketException(e);
@@ -40,7 +40,7 @@ public final class MocketClient {
         clientDaemon.close();
     }
 
-    private class MessageHandler implements SocketHandler {
+    private class ClientSocketHandler implements SocketHandler {
         @Override
         public void handleMessage(SocketDaemon socket, Message message) {
             switch (message.getType()) {
@@ -54,6 +54,11 @@ public final class MocketClient {
                     }
                     break;
             }
+        }
+
+        @Override
+        public void handleClose(SocketDaemon socket) {
+
         }
     }
 
