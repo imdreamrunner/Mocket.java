@@ -68,12 +68,9 @@ client.disconnect();
 #### Handle message from server
 
 ```java
-client.on(event, new ClientHandler() {
-    @Override
+client.on("some-event", new ClientHandler() {
     public void handle(String content) {
         log.info("Receive message " + content + " from server.");
-        receivedMessage += 1;
-        assertEquals("Message content", message, content);
     }
 });
 ```
