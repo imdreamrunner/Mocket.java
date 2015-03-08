@@ -47,6 +47,13 @@ server.trigger(client, "some-event", "Message content.");
 
 ### Mocket Client
 
+#### Things to import
+
+```java
+import io.github.imdreamrunner.mocket.MocketClient;
+import io.github.imdreamrunner.mocket.MocketClient.*;
+```
+
 #### Initialize the client
 
 ```java
