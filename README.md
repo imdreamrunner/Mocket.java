@@ -36,7 +36,7 @@ server.on("some-event", new ServerHandler() {
 });
 ```
 
-#### Send message from client
+#### Send message to clients
 
 ```java
 // You can broadcast message to all clients
@@ -78,7 +78,7 @@ client.on(event, new ClientHandler() {
 });
 ```
 
-#### Send message to the server
+#### Send message to server
 
 ```java
 client.trigger("some-event", "Some message.");
