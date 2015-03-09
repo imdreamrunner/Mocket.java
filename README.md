@@ -1,5 +1,7 @@
 # Mocket.java
 
+[![Build Status](https://travis-ci.org/imdreamrunner/Mocket.java.svg?branch=master)](https://travis-ci.org/imdreamrunner/Mocket.java)
+
 The Java implementation of Mocket, an elegant cross-language socket library.
 
 Using Mocket, you can easily create event-based socket connections among programs
