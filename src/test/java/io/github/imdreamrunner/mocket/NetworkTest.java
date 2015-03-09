@@ -42,8 +42,8 @@ public class NetworkTest {
     @After
     public void stopServer() throws InterruptedException {
         int sleepCount = 0;
-        while (receivedMessage < expectMessage && sleepCount < 5) {
-            Thread.sleep(100);
+        while (receivedMessage < expectMessage && sleepCount < 10) {
+            Thread.sleep(200);
             sleepCount++;
         }
         try {

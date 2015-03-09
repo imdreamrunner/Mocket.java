@@ -75,7 +75,11 @@ public class MocketServerTest {
             fail("Exception: " + e.toString());
         }
 
-        Thread.sleep(200);
+        int sleepCount = 0;
+        while (receivedMessage < expectMessage && sleepCount < 10) {
+            Thread.sleep(200);
+            sleepCount++;
+        }
 
         assertEquals("Number of message received", expectMessage, receivedMessage);
     }
