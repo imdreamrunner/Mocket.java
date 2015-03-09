@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,14 +24,14 @@ public class MocketServer {
     private boolean isListening;
     private ServerDaemon serverDaemon;
     private Map<String, List<ServerHandler>> handlers;
-    private Map<SocketDaemon, Client> clientMap = new HashMap<SocketDaemon, Client>();
+    private Map<SocketDaemon, Client> clientMap = new HashMap<>();
     private ServerSocketHandler serverSocketHandler;
 
     public MocketServer(String host, int port) {
         this.host = host;
         this.port = port;
         this.isListening = false;
-        this.handlers = new HashMap<String, List<ServerHandler>>();
+        this.handlers = new HashMap<>();
         this.serverSocketHandler = new ServerSocketHandler();
     }
 
@@ -115,8 +114,6 @@ public class MocketServer {
                 serverSocket = new ServerSocket(port, 10, bindAddress);
                 isListening = true;
                 dispatchEvent(ServerEvent.SERVER_START.toString().toLowerCase());
-            } catch (UnknownHostException e) {
-                throw new MocketException(e);
             } catch (IOException e) {
                 throw new MocketException(e);
             }

@@ -1,12 +1,9 @@
 package io.github.imdreamrunner.mocket;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.logging.Logger;
 import io.github.imdreamrunner.mocket.MocketServer.*;
-import io.github.imdreamrunner.mocket.MocketClient.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

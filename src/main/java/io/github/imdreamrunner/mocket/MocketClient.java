@@ -22,7 +22,7 @@ public final class MocketClient {
         this.host = host;
         this.port = port;
         this.isConnected = false;
-        this.handlers = new HashMap<String, List<ClientHandler>>();
+        this.handlers = new HashMap<>();
         this.clientSocketHandler = new ClientSocketHandler();
     }
 
