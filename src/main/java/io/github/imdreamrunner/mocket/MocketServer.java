@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,8 +56,8 @@ public class MocketServer {
     private void handleServerStop() {
         MocketException exception = serverDaemon.getException();
         if (exception != null) {
-            log.log(Level.SEVERE, "Exception happens in server");
-            log.log(Level.SEVERE, exception.toString());
+            log.log(Level.SEVERE, "Exception happens in server: " + exception.toString());
+            exception.printStackTrace();
         }
         dispatchEvent(ServerEvent.SERVER_STOP.toString().toLowerCase());
     }
@@ -135,12 +136,10 @@ public class MocketServer {
                 if (!serverSocket.isClosed()) {
                     serverSocket.close();
                 }
+            } catch (SocketException e) {
+                log.info("Server has stopped listening.");
             } catch (IOException e) {
-                if (e.getMessage().equals("Socket closed")) {
-                    log.info("Server has stopped listening.");
-                } else {
-                    this.exception = new MocketException(e);
-                }
+                this.exception = new MocketException(e);
             } catch (MocketException e) {
                 this.exception = e;
             }
