@@ -25,24 +25,24 @@ public class NetworkTest {
     public void startServer() {
         log.info("Starting test server at port " + serverPort + ".");
         server = new MocketServer(serverPort);
+        log.info("Creating test client.");
+        client = MocketClient.getInstance("127.0.0.1", serverPort);
+    }
+
+    @After
+    public void stopServer() throws InterruptedException {
         try {
             server.start();
         } catch (MocketException e) {
             fail("Start server with exception: " + e.toString());
         }
-        log.info("Creating test client.");
-        client = MocketClient.getInstance("127.0.0.1", serverPort);
         try {
             client.connect();
         } catch (MocketException e) {
             fail("Start client with exception: " + e.toString());
         }
-    }
-
-    @After
-    public void stopServer() throws InterruptedException {
         int sleepCount = 0;
-        while (receivedMessage < expectMessage && sleepCount < 10) {
+        while (receivedMessage < expectMessage && sleepCount < 20) {
             Thread.sleep(200);
             sleepCount++;
         }
@@ -74,7 +74,11 @@ public class NetworkTest {
                 assertEquals("Message content", message, content);
             }
         });
-        client.trigger(event, message);
+        client.on("server_connect", new ClientHandler() {
+            public void handle(String content) {
+                client.trigger(event, message);
+            }
+        });
     }
 
     @Test
@@ -90,7 +94,10 @@ public class NetworkTest {
                 assertEquals("Message content", message, content);
             }
         });
-        server.trigger(event, message);
-        Thread.sleep(200);
+        server.on("client_connect", new ServerHandler() {
+            public void handle(Client client, String content) {
+                server.trigger(client, event, message);
+            }
+        });
     }
 }

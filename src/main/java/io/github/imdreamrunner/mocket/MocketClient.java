@@ -11,6 +11,10 @@ import java.util.logging.Logger;
 public final class MocketClient {
     private static final Logger log = Logger.getLogger(MocketClient.class.getName());
 
+    private static enum ClientEvent {
+        SERVER_CONNECT, SERVER_DISCONNECT
+    }
+
     private String host;
     private int port;
     private boolean isConnected;
@@ -31,6 +35,7 @@ public final class MocketClient {
             Socket socket = new Socket(host, port);
             clientDaemon = new SocketDaemon(socket, this.clientSocketHandler);
             clientDaemon.start();
+            dispatchEvent(ClientEvent.SERVER_CONNECT.toString().toLowerCase());
         } catch (IOException e) {
             throw new MocketException(e);
         }
@@ -40,6 +45,19 @@ public final class MocketClient {
         clientDaemon.close();
     }
 
+    private void dispatchEvent(String event, String content) {
+        log.info("Mocket client dispatch event " + event + ".");
+        if (handlers.get(event) != null) {
+            for (ClientHandler handler : handlers.get(event)) {
+                handler.handle(content);
+            }
+        }
+    }
+
+    private void dispatchEvent(String event) {
+        dispatchEvent(event, null);
+    }
+
     private class ClientSocketHandler implements SocketHandler {
         @Override
         public void handleMessage(SocketDaemon socket, Message message) {
@@ -47,18 +65,14 @@ public final class MocketClient {
                 case SYSTEM:
                     break;
                 case USER:
-                    if (handlers.containsKey(message.getEvent())) {
-                        for (ClientHandler handler : handlers.get(message.getEvent())) {
-                            handler.handle(message.getContent());
-                        }
-                    }
+                    dispatchEvent(message.getEvent(), message.getContent());
                     break;
             }
         }
 
         @Override
         public void handleClose(SocketDaemon socket) {
-
+            dispatchEvent(ClientEvent.SERVER_DISCONNECT.toString().toLowerCase());
         }
     }
 
