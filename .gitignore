@@ -63,3 +63,6 @@ atlassian-ide-plugin.xml
 
 # NetBeans specific files/directories
 .nbattrs
+
+# Gradle wrapper
+!gradle/wrapper/gradle-wrapper.jar
