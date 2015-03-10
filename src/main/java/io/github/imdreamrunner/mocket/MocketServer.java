@@ -47,6 +47,7 @@ public class MocketServer {
         }
         serverDaemon = new ServerDaemon();
         serverDaemon.start();
+        dispatchEvent(ServerEvent.SERVER_START.toString().toLowerCase());
     }
 
     public void stop() throws MocketException {
@@ -86,9 +87,14 @@ public class MocketServer {
     }
 
     private void dispatchEvent(String event, Client client, String content) {
+        log.info("Server dispatch event " + event + " to its handler(s).");
         if (handlers.get(event) != null) {
             for (ServerHandler handler : handlers.get(event)) {
-                handler.handle(client, content);
+                try {
+                    handler.handle(client, content);
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "Exception in executing the handler: " + e.toString());
+                }
             }
         }
     }
@@ -114,7 +120,6 @@ public class MocketServer {
                 InetAddress bindAddress = InetAddress.getByName(host);
                 serverSocket = new ServerSocket(port, 10, bindAddress);
                 isListening = true;
-                dispatchEvent(ServerEvent.SERVER_START.toString().toLowerCase());
             } catch (IOException e) {
                 throw new MocketException(e);
             }
@@ -144,6 +149,7 @@ public class MocketServer {
                 this.exception = e;
             }
             handleServerStop();
+            log.info("ServerDaemon really finished.");
         }
 
         public void close() throws MocketException {
@@ -216,6 +222,6 @@ public class MocketServer {
     }
 
     public static abstract class ServerHandler {
-        public abstract void handle(Client client, String content);
+        public abstract void handle(Client client, String content) throws Exception;
     }
 }
