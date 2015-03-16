@@ -10,8 +10,15 @@ import java.util.Map;
 
 public class ChatServer {
     public static void main(String args[]) throws MocketException {
-        System.out.println("Starting chat server.");
-        final MocketServer server = new MocketServer(5200);
+        if (args.length != 1) {
+            System.out.println("Please start this program with <port>");
+            System.exit(1);
+        }
+
+        int port = Integer.parseInt(args[0]);
+
+        System.out.println("Starting chat server at port " + port + ".");
+        final MocketServer server = new MocketServer(port);
 
         final Map<Client, String> nicknames = new HashMap<>();
 
