@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class MocketClient {
@@ -49,7 +50,11 @@ public final class MocketClient {
         log.info("Mocket client dispatch event " + event + ".");
         if (handlers.get(event) != null) {
             for (ClientHandler handler : handlers.get(event)) {
-                handler.handle(content);
+                try {
+                    handler.handle(content);
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "Exception in executing the handler: " + e.toString());
+                }
             }
         }
     }
@@ -96,6 +101,6 @@ public final class MocketClient {
     }
 
     public static abstract class ClientHandler {
-        public abstract void handle(String content);
+        public abstract void handle(String content) throws Exception;
     }
 }

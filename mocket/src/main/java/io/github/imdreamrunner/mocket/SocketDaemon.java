@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Logger;
 
 class SocketDaemon extends Thread {
@@ -37,13 +38,11 @@ class SocketDaemon extends Thread {
                 Message message = Message.fromJson(inputLine);
                 handler.handleMessage(this, message);
             }
+        } catch (SocketException e) {
+            log.info("Socket has been disconnected.");
         } catch (IOException e) {
-            if (e.getMessage().equals("Socket closed")) {
-                log.info("Socket has been disconnected.");
-            } else {
-                exception = new MocketException(e);
-                log.warning("Cannot read from client: " + exception.toString());
-            }
+            exception = new MocketException(e);
+            log.warning("Cannot read from client: " + exception.toString());
         } catch (MocketException e) {
             exception = e;
             log.warning("Exception reading from client: " + exception.toString());

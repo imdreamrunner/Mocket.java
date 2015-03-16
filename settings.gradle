@@ -1,2 +1,6 @@
 rootProject.name = 'Mocket'
 
+include "mocket"
+include "examples:ChatServer"
+include "examples:ChatClient"
+

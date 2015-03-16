@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,17 +47,18 @@ public class MocketServer {
         }
         serverDaemon = new ServerDaemon();
         serverDaemon.start();
+        dispatchEvent(ServerEvent.SERVER_START.toString().toLowerCase());
     }
 
     public void stop() throws MocketException {
-        serverDaemon.close();;
+        serverDaemon.close();
     }
 
     private void handleServerStop() {
         MocketException exception = serverDaemon.getException();
         if (exception != null) {
-            log.log(Level.SEVERE, "Exception happens in server");
-            log.log(Level.SEVERE, exception.toString());
+            log.log(Level.SEVERE, "Exception happens in server: " + exception.toString());
+            exception.printStackTrace();
         }
         dispatchEvent(ServerEvent.SERVER_STOP.toString().toLowerCase());
     }
@@ -85,9 +87,14 @@ public class MocketServer {
     }
 
     private void dispatchEvent(String event, Client client, String content) {
+        log.info("Server dispatch event " + event + " to its handler(s).");
         if (handlers.get(event) != null) {
             for (ServerHandler handler : handlers.get(event)) {
-                handler.handle(client, content);
+                try {
+                    handler.handle(client, content);
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "Exception in executing the handler: " + e.toString());
+                }
             }
         }
     }
@@ -113,7 +120,6 @@ public class MocketServer {
                 InetAddress bindAddress = InetAddress.getByName(host);
                 serverSocket = new ServerSocket(port, 10, bindAddress);
                 isListening = true;
-                dispatchEvent(ServerEvent.SERVER_START.toString().toLowerCase());
             } catch (IOException e) {
                 throw new MocketException(e);
             }
@@ -132,19 +138,22 @@ public class MocketServer {
                     clientThread.start();
                     dispatchEvent(ServerEvent.CLIENT_CONNECT.toString().toLowerCase(), client);
                 }
+                for (SocketDaemon clientThread : clientMap.keySet()) {
+                    clientThread.close();
+                }
                 if (!serverSocket.isClosed()) {
+                    // TODO: Verify if this is necessary.
                     serverSocket.close();
                 }
+            } catch (SocketException e) {
+                log.info("Server has stopped listening.");
             } catch (IOException e) {
-                if (e.getMessage().equals("Socket closed")) {
-                    log.info("Server has stopped listening.");
-                } else {
-                    this.exception = new MocketException(e);
-                }
+                this.exception = new MocketException(e);
             } catch (MocketException e) {
                 this.exception = e;
             }
             handleServerStop();
+            log.info("ServerDaemon really finished.");
         }
 
         public void close() throws MocketException {
@@ -217,6 +226,6 @@ public class MocketServer {
     }
 
     public static abstract class ServerHandler {
-        public abstract void handle(Client client, String content);
+        public abstract void handle(Client client, String content) throws Exception;
     }
 }

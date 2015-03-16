@@ -1,0 +1,17 @@
+apply plugin:'application'
+
+sourceCompatibility = 1.7
+version = '1.0'
+mainClassName = "io.github.imdreamrunner.chat_server.ChatServer"
+
+repositories {
+    mavenCentral()
+}
+
+run {
+    standardInput = System.in
+}
+
+dependencies {
+    compile project(":mocket")
+}

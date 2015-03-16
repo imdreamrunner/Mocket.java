@@ -16,7 +16,7 @@ public class MocketServerTest {
     int expectMessage = 0;
     int receivedMessage = 0;
 
-    static int serverPort = 5000;
+    static int serverPort = 5100;
 
     @Test
     public void serverTest() throws InterruptedException {
