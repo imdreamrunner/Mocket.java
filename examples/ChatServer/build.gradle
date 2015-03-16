@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(":mocket")
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version:'2.5.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.5.1'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
