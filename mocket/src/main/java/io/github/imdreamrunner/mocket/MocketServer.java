@@ -51,7 +51,7 @@ public class MocketServer {
     }
 
     public void stop() throws MocketException {
-        serverDaemon.close();;
+        serverDaemon.close();
     }
 
     private void handleServerStop() {
@@ -138,7 +138,11 @@ public class MocketServer {
                     clientThread.start();
                     dispatchEvent(ServerEvent.CLIENT_CONNECT.toString().toLowerCase(), client);
                 }
+                for (SocketDaemon clientThread : clientMap.keySet()) {
+                    clientThread.close();
+                }
                 if (!serverSocket.isClosed()) {
+                    // TODO: Verify if this is necessary.
                     serverSocket.close();
                 }
             } catch (SocketException e) {
