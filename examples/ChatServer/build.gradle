@@ -9,8 +9,8 @@ repositories {
 }
 
 run {
+    args = ["5200"]
     standardInput = System.in
-    args ["5200"]
 }
 
 dependencies {
