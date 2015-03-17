@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public final class MocketClient {
@@ -23,12 +24,17 @@ public final class MocketClient {
     private Map<String, List<ClientHandler>> handlers;
     private ClientSocketHandler clientSocketHandler;
 
-    private MocketClient(String host, int port) {
+    private MocketClient(String host, int port,  Map<String, String> config) {
         this.host = host;
         this.port = port;
         this.isConnected = false;
         this.handlers = new HashMap<>();
         this.clientSocketHandler = new ClientSocketHandler();
+        if (config != null && config.containsKey("log") && config.get("log").equals("true")) {
+            // Some log set up
+        } else {
+            LogManager.getLogManager().reset();
+        }
     }
 
     public void connect() throws MocketException {
@@ -81,8 +87,11 @@ public final class MocketClient {
         }
     }
 
+    public static MocketClient getInstance(String host, int port, Map<String, String> config) {
+        return new MocketClient(host, port, config);
+    }
     public static MocketClient getInstance(String host, int port) {
-        return new MocketClient(host, port);
+        return new MocketClient(host, port, null);
     }
 
     public void on(String event, ClientHandler handler) {

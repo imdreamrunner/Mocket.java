@@ -10,9 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class MocketServer {
+public final class MocketServer {
     private static final Logger log = Logger.getLogger(MocketServer.class.getName());
 
     private static enum ServerEvent {
@@ -28,16 +29,29 @@ public class MocketServer {
     private Map<SocketDaemon, Client> clientMap = new HashMap<>();
     private ServerSocketHandler serverSocketHandler;
 
-    public MocketServer(String host, int port) {
+    public MocketServer(String host, int port, Map<String, String> config) {
         this.host = host;
         this.port = port;
         this.isListening = false;
         this.handlers = new HashMap<>();
         this.serverSocketHandler = new ServerSocketHandler();
+        if (config != null && config.containsKey("log") && config.get("log").equals("true")) {
+            // Some log set up
+        } else {
+            LogManager.getLogManager().reset();
+        }
+    }
+
+    public MocketServer(String host, int port) {
+        this(host, port, null);
     }
 
     public MocketServer(int port) {
-        this("0.0.0.0", port);
+        this("0.0.0.0", port, null);
+    }
+
+    public MocketServer(int port,  Map<String, String> config) {
+        this("0.0.0.0", port, config);
     }
 
     public void start() throws MocketException {
