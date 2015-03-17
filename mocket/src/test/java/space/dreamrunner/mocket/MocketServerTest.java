@@ -1,9 +1,8 @@
-package io.github.imdreamrunner.mocket;
+package space.dreamrunner.mocket;
 
 import org.junit.Test;
 
 import java.util.logging.Logger;
-import io.github.imdreamrunner.mocket.MocketServer.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -25,29 +24,29 @@ public class MocketServerTest {
         log.info("Starting test server at port " + serverPort + ".");
         server = new MocketServer(serverPort);
 
-        server.on("server_start", new ServerHandler() {
-            public void handle(Client client, String content) {
+        server.on("server_start", new MocketServer.ServerHandler() {
+            public void handle(MocketServer.Client client, String content) {
                 log.info("Server started.");
                 receivedMessage += 1;
             }
         });
 
-        server.on("client_connect", new ServerHandler() {
-            public void handle(Client client, String content) {
+        server.on("client_connect", new MocketServer.ServerHandler() {
+            public void handle(MocketServer.Client client, String content) {
                 log.info("Client " + client.toString() + " connected.");
                 receivedMessage += 1;
             }
         });
 
-        server.on("server_stop", new ServerHandler() {
-            public void handle(Client client, String content) {
+        server.on("server_stop", new MocketServer.ServerHandler() {
+            public void handle(MocketServer.Client client, String content) {
                 log.info("Server stopped.");
                 receivedMessage += 1;
             }
         });
 
-        server.on("client_disconnect", new ServerHandler() {
-            public void handle(Client client, String content) {
+        server.on("client_disconnect", new MocketServer.ServerHandler() {
+            public void handle(MocketServer.Client client, String content) {
                 log.info("Client " + client.toString() + " disconnected.");
                 receivedMessage += 1;
             }

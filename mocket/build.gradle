@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 sourceCompatibility = 1.7
-group = 'io.github.imdreamrunner'
+group = 'space.imdreamrunner'
 version = '1.0-SNAPSHOT'
 
 repositories {

@@ -1,4 +1,4 @@
-package io.github.imdreamrunner.mocket;
+package space.dreamrunner.mocket;
 
 import org.junit.After;
 import org.junit.Before;
@@ -7,8 +7,6 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-import io.github.imdreamrunner.mocket.MocketServer.*;
-import io.github.imdreamrunner.mocket.MocketClient.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -74,14 +72,14 @@ public class NetworkTest {
         expectMessage = 1;
         final String event = "testEvent";
         final String message = "Test Message";
-        server.on(event, new ServerHandler() {
-            public void handle(Client client, String content) {
+        server.on(event, new MocketServer.ServerHandler() {
+            public void handle(MocketServer.Client client, String content) {
                 log.info("Receive message " + content + " from " + client.toString());
                 receivedMessage += 1;
                 assertEquals("Message content", message, content);
             }
         });
-        client.on("server_connect", new ClientHandler() {
+        client.on("server_connect", new MocketClient.ClientHandler() {
             public void handle(String content) {
                 client.trigger(event, message);
             }
@@ -93,7 +91,7 @@ public class NetworkTest {
         expectMessage = 1;
         final String event = "testEvent";
         final String message = "Test Message";
-        client.on(event, new ClientHandler() {
+        client.on(event, new MocketClient.ClientHandler() {
             @Override
             public void handle(String content) {
                 log.info("Receive message " + content + " from server.");
@@ -101,8 +99,8 @@ public class NetworkTest {
                 assertEquals("Message content", message, content);
             }
         });
-        server.on("client_connect", new ServerHandler() {
-            public void handle(Client client, String content) {
+        server.on("client_connect", new MocketServer.ServerHandler() {
+            public void handle(MocketServer.Client client, String content) {
                 server.trigger(client, event, message);
             }
         });

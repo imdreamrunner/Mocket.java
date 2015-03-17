@@ -2,7 +2,7 @@ apply plugin:'application'
 
 sourceCompatibility = 1.7
 version = '1.0'
-mainClassName = "io.github.imdreamrunner.chat_server.ChatServer"
+mainClassName = "space.dreamrunner.chat_server.ChatServer"
 
 repositories {
     mavenCentral()
@@ -10,6 +10,7 @@ repositories {
 
 run {
     standardInput = System.in
+    args ["5200"]
 }
 
 dependencies {

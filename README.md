@@ -77,8 +77,8 @@ To be added.
 #### Things to import
 
 ```java
-import io.github.imdreamrunner.mocket.MocketServer;
-import io.github.imdreamrunner.mocket.MocketServer.*;
+import space.dreamrunner.mocket.MocketServer;
+import space.dreamrunner.mocket.MocketServer.*;
 ```
 
 #### Initialize the server
@@ -122,8 +122,8 @@ server.trigger(client, "some-event", "Message content.");
 #### Things to import
 
 ```java
-import io.github.imdreamrunner.mocket.MocketClient;
-import io.github.imdreamrunner.mocket.MocketClient.*;
+import space.dreamrunner.mocket.MocketClient;
+import space.dreamrunner.mocket.MocketClient.*;
 ```
 
 #### Initialize the client

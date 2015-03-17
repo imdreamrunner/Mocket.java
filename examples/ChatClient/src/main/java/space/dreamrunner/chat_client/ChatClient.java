@@ -1,8 +1,8 @@
-package io.github.imdreamrunner.chat_client;
+package space.dreamrunner.chat_client;
 
-import io.github.imdreamrunner.mocket.MocketClient;
-import io.github.imdreamrunner.mocket.MocketException;
-import io.github.imdreamrunner.mocket.MocketClient.*;
+import space.dreamrunner.mocket.MocketClient;
+import space.dreamrunner.mocket.MocketClient.*;
+import space.dreamrunner.mocket.MocketException;
 
 import java.util.Scanner;
 

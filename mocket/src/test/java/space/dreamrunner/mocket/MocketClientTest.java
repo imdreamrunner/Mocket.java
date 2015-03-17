@@ -1,10 +1,7 @@
-package io.github.imdreamrunner.mocket;
+package space.dreamrunner.mocket;
 
 import org.junit.Test;
 import java.util.logging.Logger;
-
-import io.github.imdreamrunner.mocket.MocketServer.*;
-import io.github.imdreamrunner.mocket.MocketClient.*;
 
 public class MocketClientTest {
     private static final Logger log = Logger.getLogger(MocketServerTest.class.getName());
@@ -18,7 +15,7 @@ public class MocketClientTest {
         testServer = new MocketServer(serverPort);
         testServer.on("server_start", afterServerStart);
         testServer.on("server_stop", afterServerStop);
-        testServer.on("client_connect", new ServerHandler() {
+        testServer.on("client_connect", new MocketServer.ServerHandler() {
             public void handle(MocketServer.Client client, String content) {
                 log.info("Client " + client.toString() + " connected.");
             }
@@ -31,20 +28,20 @@ public class MocketClientTest {
         Thread.sleep(1000);
     }
 
-    public ServerHandler afterServerStart = new ServerHandler() {
-        public void handle(Client _, String content) throws Exception {
+    public MocketServer.ServerHandler afterServerStart = new MocketServer.ServerHandler() {
+        public void handle(MocketServer.Client _, String content) throws Exception {
             log.info("Server start handler called.");
             testClient.connect();
         }
     };
 
-    public ServerHandler afterServerStop = new ServerHandler() {
-        public void handle(Client _, String content) throws Exception {
+    public MocketServer.ServerHandler afterServerStop = new MocketServer.ServerHandler() {
+        public void handle(MocketServer.Client _, String content) throws Exception {
             log.info("Server stop handler called.");
         }
     };
 
-    public ClientHandler afterClientConnect = new ClientHandler() {
+    public MocketClient.ClientHandler afterClientConnect = new MocketClient.ClientHandler() {
         public void handle(String content) throws Exception {
             log.info("Client connected handler called.");
             testServer.stop();

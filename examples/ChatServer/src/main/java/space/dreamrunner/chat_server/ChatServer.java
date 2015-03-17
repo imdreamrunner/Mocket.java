@@ -1,8 +1,8 @@
-package io.github.imdreamrunner.chat_server;
+package space.dreamrunner.chat_server;
 
-import io.github.imdreamrunner.mocket.MocketException;
-import io.github.imdreamrunner.mocket.MocketServer;
-import io.github.imdreamrunner.mocket.MocketServer.*;
+import space.dreamrunner.mocket.MocketException;
+import space.dreamrunner.mocket.MocketServer;
+import space.dreamrunner.mocket.MocketServer.*;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package io.github.imdreamrunner.mocket;
+package space.dreamrunner.mocket;
 
 interface SocketHandler {
     void handleMessage(SocketDaemon socket, Message message) throws MocketException;

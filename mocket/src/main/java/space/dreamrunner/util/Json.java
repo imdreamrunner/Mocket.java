@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2009-2013 Typesafe Inc. <http://www.typesafe.com>
  */
-package io.github.imdreamrunner.util;
+package space.dreamrunner.util;
 
 import java.io.IOException;
 import java.io.StringWriter;

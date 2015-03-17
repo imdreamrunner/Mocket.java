@@ -1,4 +1,4 @@
-package io.github.imdreamrunner.mocket;
+package space.dreamrunner.mocket;
 
 public class MocketException extends Exception {
     private Exception originException;

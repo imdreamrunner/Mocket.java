@@ -1,11 +1,11 @@
-package io.github.imdreamrunner.mocket;
+package space.dreamrunner.mocket;
 
 import java.util.Date;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.imdreamrunner.util.Json;
+import space.dreamrunner.util.Json;
 
 class Message {
     private static final Logger log = Logger.getLogger(Message.class.getName());

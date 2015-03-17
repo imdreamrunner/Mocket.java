@@ -1,17 +1,17 @@
-package io.github.imdreamrunner.mocket;
+package space.dreamrunner.mocket;
 
 import java.util.Date;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.github.imdreamrunner.util.Json;
+import space.dreamrunner.util.Json;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import static io.github.imdreamrunner.mocket.Message.MessageType;
+import static space.dreamrunner.mocket.Message.MessageType;
 
 public class MessageTest {
     private static final Logger log = Logger.getLogger(MessageTest.class.getName());

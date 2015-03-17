@@ -1,4 +1,4 @@
-package io.github.imdreamrunner.mocket;
+package space.dreamrunner.mocket;
 
 import java.io.BufferedReader;
 import java.io.IOException;
