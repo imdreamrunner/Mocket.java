@@ -1,10 +1,26 @@
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.7
+group = 'io.github.imdreamrunner'
 version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+model {
+    tasks.generatePomFileForMavenJavaPublication {
+        destination = file("$buildDir/generated-pom.xml")
+    }
 }
 
 dependencies {
