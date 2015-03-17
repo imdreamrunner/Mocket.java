@@ -4,16 +4,21 @@ import io.github.imdreamrunner.mocket.MocketClient;
 import io.github.imdreamrunner.mocket.MocketException;
 import io.github.imdreamrunner.mocket.MocketClient.*;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class ChatClient {
     public static void main(String args[]) throws MocketException {
-        System.out.println("Starting chat client.");
+        if (args.length != 2) {
+            System.out.println("Please start this program with <host> <port>");
+            System.exit(1);
+        }
 
-        final MocketClient client = MocketClient.getInstance("127.0.0.1", 5200);
+        String host = args[0];
+        int port = Integer.parseInt(args[1]);
+
+        System.out.println("Client connecting to " + host + ":" + port + ".");
+
+        final MocketClient client = MocketClient.getInstance(host, port);
 
         client.on("message", new ClientHandler() {
             public void handle(String content) {
@@ -45,7 +50,5 @@ public class ChatClient {
         });
 
         client.connect();
-
-        System.out.println("Chat client stopped.");
     }
 }

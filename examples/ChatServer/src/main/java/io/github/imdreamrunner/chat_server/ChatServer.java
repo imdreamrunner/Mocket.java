@@ -10,14 +10,23 @@ import java.util.Map;
 
 public class ChatServer {
     public static void main(String args[]) throws MocketException {
-        System.out.println("Starting chat server.");
-        final MocketServer server = new MocketServer(5200);
+        if (args.length != 1) {
+            System.out.println("Please start this program with <port>");
+            System.exit(1);
+        }
+
+        int port = Integer.parseInt(args[0]);
+
+        System.out.println("Starting chat server at port " + port + ".");
+        final MocketServer server = new MocketServer(port);
 
         final Map<Client, String> nicknames = new HashMap<>();
 
         server.on("client_connect", new ServerHandler() {
             public void handle(Client client, String content) {
                 server.trigger(client, "message", createMessage("server","Who are you?"));
+                System.out.println("Client from " + client.getHost() + ":" + client.getPort() + "" +
+                        " is connected.");
             }
         });
 
@@ -44,6 +53,8 @@ public class ChatServer {
                         server.trigger("message",
                                 createMessage("server", content + " joins the chat."));
                         nicknames.put(client, content);
+                        System.out.println(client.getHost() + ":" + client.getPort() +
+                                " is now " + content + ".");
                     }
                 } else {
                     server.trigger("message", createMessage(nicknames.get(client), content));

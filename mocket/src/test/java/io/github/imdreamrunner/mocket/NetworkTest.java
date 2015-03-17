@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 import io.github.imdreamrunner.mocket.MocketServer.*;
 import io.github.imdreamrunner.mocket.MocketClient.*;
@@ -23,10 +25,15 @@ public class NetworkTest {
 
     @Before
     public void startServer() {
+        Map<String, String> testConfig =  new HashMap<String, String>() {
+            {
+                put("log", "true");
+            }
+        };
         log.info("Starting test server at port " + serverPort + ".");
-        server = new MocketServer(serverPort);
+        server = new MocketServer(serverPort, testConfig);
         log.info("Creating test client.");
-        client = MocketClient.getInstance("127.0.0.1", serverPort);
+        client = MocketClient.getInstance("127.0.0.1", serverPort, testConfig);
     }
 
     @After
