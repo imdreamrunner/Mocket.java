@@ -7,7 +7,16 @@ The Java implementation of Mocket, an elegant cross-language socket library.
 Using Mocket, you can easily create event-based socket connections among programs
 developed in different programming languages.
 
-## Usage
+## Mocket 101
+
+### Sending message using Mocket
+
+To send message using Mocket, you need to set up a server and several clients. The server will maintain the connections
+to all clients, while the clients do not communicate between each other directly.
+
+Mocket is event-based. Every message sent between server and client will be entitled an event name and a content.
+Except for user defined messages, there are some system built-in ones for special purposes. They are listed in related
+sections below.
 
 ### Mocket Server
 
@@ -47,6 +56,13 @@ server.trigger("some-event", "Message content.");
 server.trigger(client, "some-event", "Message content.");
 ```
 
+#### Built-in messages for server
+
+* `server_start`: Trigger when the server has started listening to the port.
+* `server_stop`: Trigger when the server has stopped listening to the port.
+* `client_connect`: Trigger when there is a new client connected to the server.
+* `client_disconnect`: Trigger when a client is disconnected from the server.
+
 ### Mocket Client
 
 #### Things to import
@@ -82,6 +98,11 @@ client.on("some-event", new ClientHandler() {
 ```java
 client.trigger("some-event", "Some message.");
 ```
+
+#### Built-in events for client
+
+* `server_connect`: Trigger when the clients has been connected to the server.
+* `server_disconnect`: Trigger when the server has been disconnected from the server.
 
 ## License
 
