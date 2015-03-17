@@ -25,6 +25,8 @@ public class ChatServer {
         server.on("client_connect", new ServerHandler() {
             public void handle(Client client, String content) {
                 server.trigger(client, "message", createMessage("server","Who are you?"));
+                System.out.println("Client from " + client.getHost() + ":" + client.getPort() + "" +
+                        " is connected.");
             }
         });
 
@@ -51,6 +53,8 @@ public class ChatServer {
                         server.trigger("message",
                                 createMessage("server", content + " joins the chat."));
                         nicknames.put(client, content);
+                        System.out.println(client.getHost() + ":" + client.getPort() +
+                                " is now " + content + ".");
                     }
                 } else {
                     server.trigger("message", createMessage(nicknames.get(client), content));
