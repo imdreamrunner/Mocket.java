@@ -50,7 +50,5 @@ public class ChatClient {
         });
 
         client.connect();
-
-        System.out.println("Chat client stopped.");
     }
 }
