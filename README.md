@@ -16,6 +16,64 @@ Mocket is event-based. Every message sent between server and client will be enti
 Except for user defined messages, there are some system built-in ones for special purposes. They are listed in related
 sections below.
 
+### Add Mocket as dependency
+
+#### Using a project management / build tool
+
+It will be easy if you are using a project management or build tool for your project. We currently hosting a Maven 
+repository at `http://maven.dreamrunner.space`. Please edit your configuration file according to the sample below.
+
+##### Maven
+
+```
+<project>
+    ...
+    <repositories>
+        ...
+        <repository>
+            <id>mocket-repo</id>
+            <name>mocket repo</name>
+            <url>http://maven.dreamrunner.space</url>
+        </repository>
+    </repositories>
+    ...
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>space.imdreamrunner</groupId>
+            <artifactId>mocket</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>
+```
+
+Secondly, add mocket to the dependency list.
+
+```
+
+```
+
+##### Gradle
+
+```
+...
+repositories {
+    ...
+    maven {
+        url "http://maven.dreamrunner.space"
+    }
+}
+dependencies {
+    ...
+    compile group: 'space.imdreamrunner', name: 'mocket', version:'1.0-SNAPSHOT'
+}
+```
+
+#### Using the jar
+
+To be added.
+
 ### Mocket Server
 
 #### Things to import
