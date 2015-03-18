@@ -25,6 +25,8 @@ repository at `http://maven.dreamrunner.space`. Please edit your configuration f
 
 ##### Maven
 
+`pom.xml`
+
 ```
 <project>
     ...
@@ -48,13 +50,9 @@ repository at `http://maven.dreamrunner.space`. Please edit your configuration f
 </project>
 ```
 
-Secondly, add mocket to the dependency list.
-
-```
-
-```
-
 ##### Gradle
+
+`build.gradle`
 
 ```
 ...
