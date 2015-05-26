@@ -42,7 +42,7 @@ repository at `http://maven.dreamrunner.space`. Please edit your configuration f
     <dependencies>
         ...
         <dependency>
-            <groupId>space.imdreamrunner</groupId>
+            <groupId>space.dreamrunner</groupId>
             <artifactId>mocket</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -64,7 +64,7 @@ repositories {
 }
 dependencies {
     ...
-    compile group: 'space.imdreamrunner', name: 'mocket', version:'1.0-SNAPSHOT'
+    compile group: 'space.dreamrunner', name: 'mocket', version:'1.0-SNAPSHOT'
 }
 ```
 
