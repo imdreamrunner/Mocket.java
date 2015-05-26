@@ -19,7 +19,7 @@ public class NetworkTest {
     int expectMessage = 0;
     int receivedMessage = 0;
 
-    static int serverPort = 5100;
+    static int serverPort = 5102;
 
     @Before
     public void startServer() {
